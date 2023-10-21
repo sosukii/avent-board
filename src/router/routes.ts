@@ -18,18 +18,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import('src/pages/index'),
   },
   {
-    name: ROUTES_NAMES.REGISTER,
-    path: '/register',
-    meta: { title: 'Avent - Регистрация' },
-    component: () => import('src/pages/registration'),
-  },
-  {
-    name: ROUTES_NAMES.LOGIN,
-    path: '/login',
-    meta: { title: 'Avent - Логин' },
-    component: () => import('src/pages/login'),
-  },
-  {
     name: ROUTES_NAMES.PROFILE,
     path: '/profile',
     meta: { title: 'Личный кабинет - Avent' },
