@@ -1,0 +1,1 @@
+import{Q as e}from"./QPage.2c6b3d16.js";import{d as a,o as t,c as o,w as r,a as n}from"./index.29b76fb7.js";const s=n("h1",null,"Cart page",-1),c=a({__name:"index",setup(_){return a({name:"CartPage"}),(p,l)=>(t(),o(e,null,{default:r(()=>[s]),_:1}))}});var i=c;export{i as default};
