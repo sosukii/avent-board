@@ -19,7 +19,7 @@ export async function fetchAccessToken(
   secret: string
 ): Promise<string | null> {
   try {
-    const link = import.meta.env.VITE_ACCESS_TOKEN
+    const link = import.meta.env.VITE_REG;
     const response: AxiosResponse<{ access_token: string }> = await axios({
       url: link,
       method: 'post',
@@ -65,4 +65,3 @@ export async function manageToken(): Promise<string> {
 
   return getTokenFromCookies();
 }
-

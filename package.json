@@ -1,5 +1,7 @@
 {
   "name": "avent-board",
+  "homepage": "https://sosukii.github.io/avent-board",
+  "proxy": "http://localhost:5000",
   "version": "0.0.1",
   "description": "A Quasar Project",
   "productName": "Avent",
@@ -11,11 +13,13 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build",
-    "prepare": "husky install && npx husky add .husky/pre-commit \"npx lint-staged --relative\""
+    "prepare": "husky install && npx husky add .husky/pre-commit \"npx lint-staged --relative\"",
+    "deploy": "gh-pages -d dist/spa"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",
+    "gh-pages": "^6.0.0",
     "pinia": "^2.0.11",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
