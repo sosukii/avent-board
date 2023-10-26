@@ -27,7 +27,8 @@ const userEmail = ref('');
 const emit = defineEmits(['update:email']);
 
 const updateEmail = (value: string | number | null): void => {
-  if (value && typeof value === 'string') emit('update:email', value);
+  if (value && typeof value === 'string')
+    emit('update:email', { value: value, type: 'email' });
 };
 
 defineComponent({
