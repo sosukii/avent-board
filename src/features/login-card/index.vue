@@ -4,24 +4,24 @@
     transition-show="flip-right"
     transition-hide="flip-left"
   >
-    <q-card-section class="q-pt-none">
-      <InputEmail v-model="userEmail" />
-      <InputPassword v-model="userPassword" />
+    <q-card-section>
+      <q-btn label="Логин" @click="reg = false" class="q-mr-sm" />
+      <q-btn label="Регистрация" @click="reg = true" />
     </q-card-section>
 
-    <q-separator />
+    <q-card-section>
+      <InputName @update:name="handleData" v-if="reg" />
+      <InputEmail @update:email="handleData" />
+      <InputPassword @update:password="handleData" />
+    </q-card-section>
 
-    <q-card-actions align="right">
+    <q-card-actions align="center">
       <q-btn
         v-close-popup
-        @click="handleLogin"
-        flat
-        color="primary"
-        label="Войти"
+        class="text-capitalize"
+        @click="handleAuth"
+        :label="reg ? 'Зарегистрироваться' : 'Войти'"
       />
-      <div class="text-caption text-grey">Ещё нет аккаунта?</div>
-
-      <q-btn flat label="Зарегистрироваться" />
     </q-card-actions>
   </q-card>
 </template>
@@ -30,12 +30,24 @@
 import { defineComponent, ref } from 'vue';
 import InputPassword from './ui/inputPassword.vue';
 import InputEmail from './ui/inputEmail.vue';
+import InputName from './ui/inputName.vue';
+import { objInput, User } from './ui/types';
+import { register } from 'src/shared/api/registration';
+import { login } from 'src/shared/api/auth';
 
-const userEmail = ref('');
-const userPassword = ref('');
+const reg = ref(false);
 
-function handleLogin(): void {
-  console.log(userEmail.value, userPassword.value);
+const userData: User = {
+  email: '',
+  password: '',
+};
+
+function handleData(inputData: objInput): void {
+  const { value, type } = inputData;
+  userData[type] = value;
+}
+async function handleAuth(): Promise<void> {
+  reg.value ? await register(userData) : await login(userData);
 }
 
 defineComponent({

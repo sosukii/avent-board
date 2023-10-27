@@ -1,7 +1,7 @@
 {
   "name": "avent-board",
   "homepage": "https://sosukii.github.io/avent-board",
-  "proxy": "http://localhost:5000",
+  "proxy": "avent-server-production.up.railway.app",
   "version": "0.0.1",
   "description": "A Quasar Project",
   "productName": "Avent",

@@ -67,12 +67,7 @@
                 >
                   <q-item-section>Войти</q-item-section>
                 </q-item>
-                <q-item
-                  to="/login"
-                  v-if="isUserAuthenticated"
-                  @click="logout"
-                  clickable
-                >
+                <q-item v-if="isUserAuthenticated" @click="logout" clickable>
                   <q-item-section>Выйти</q-item-section>
                 </q-item>
               </q-list>
@@ -107,7 +102,7 @@
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from 'src/stores/user';
-import { isAuthenticated, removeTokenFromCookies } from 'src/shared/api/auth';
+import { authToken } from 'src/shared/api/auth';
 import LoginCard from 'src/features/login-card/index';
 
 const search = ref('');
@@ -128,13 +123,13 @@ const router = useRouter();
 const isUserAuthenticated = computed(() => userStore.isAuthenticated);
 
 onMounted(() => {
-  userStore.setIsAuthenticated(isAuthenticated());
+  userStore.setIsAuthenticated(!!authToken.get());
 });
 
 const logout = (): void => {
-  removeTokenFromCookies();
+  authToken.remove();
   userStore.setIsAuthenticated(false);
-  router.push('/login');
+  router.push('/');
 };
 
 defineComponent({

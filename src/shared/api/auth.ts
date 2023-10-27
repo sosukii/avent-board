@@ -1,67 +1,56 @@
 import axios, { AxiosResponse } from 'axios';
-import { Cookies } from 'quasar';
+import { Cookies, Notify } from 'quasar';
+import { useUserStore } from 'src/stores/user';
 
 const TOKEN_KEY = 'auth_token';
 
-export function getTokenFromCookies(): string {
-  return Cookies.get(TOKEN_KEY);
+export const authToken = {
+  get: (): string => Cookies.get(TOKEN_KEY),
+  set: (newToken: string): void => Cookies.set(TOKEN_KEY, newToken),
+  remove: (): void => Cookies.remove(TOKEN_KEY),
+};
+
+interface Customer {
+  email: string;
+  password: string;
+}
+interface AuthResult {
+  message: string;
+  token: string;
+  user: {
+    id: string;
+    email: string;
+  };
+}
+interface AuthError {
+  response: {
+    data: { message: string };
+    status: number;
+  };
 }
 
-export function saveTokenToCookies(bearerToken: string): void {
-  Cookies.set(TOKEN_KEY, bearerToken);
-}
-export function removeTokenFromCookies(): void {
-  Cookies.remove(TOKEN_KEY);
-}
-
-export async function fetchAccessToken(
-  id: string,
-  secret: string
-): Promise<string | null> {
+export async function login(data: Customer): Promise<AuthResult | AuthError> {
   try {
-    const link = import.meta.env.VITE_REG;
-    const response: AxiosResponse<{ access_token: string }> = await axios({
+    const link = import.meta.env.VITE_LOGIN;
+    const response: AxiosResponse<AuthResult> = await axios({
       url: link,
       method: 'post',
-      params: {
-        grant_type: 'client_credentials',
-      },
-      auth: {
-        username: id,
-        password: secret,
-      },
+      data: data,
     });
+    Notify.create('Успешный вход! meow~ 🐈🐈');
 
-    return response.data.access_token;
-  } catch (error) {
-    return null;
+    const { token } = response.data;
+
+    authToken.set(token);
+
+    const userStore = useUserStore();
+    userStore.setIsAuthenticated(true);
+
+    return response.data;
+  } catch (error: unknown) {
+    const errorObj = error as AuthError;
+
+    Notify.create(errorObj.response.data.message + ' 🙄');
+    return errorObj;
   }
-}
-
-export async function auth(): Promise<void> {
-  const isTokenExist = getTokenFromCookies();
-
-  if (!isTokenExist) {
-    const id: string = import.meta.env.VITE_SPA_CLIENT_ID;
-    const secret: string = import.meta.env.VITE_SPA_CLIENT_SECRET;
-
-    const token = `${await fetchAccessToken(id, secret)}`;
-    if (token) {
-      saveTokenToCookies(token);
-    }
-  }
-}
-
-export function isAuthenticated(): boolean {
-  const token = getTokenFromCookies();
-
-  return !(!token || token === 'null');
-}
-
-export async function manageToken(): Promise<string> {
-  if (!isAuthenticated()) {
-    await auth();
-  }
-
-  return getTokenFromCookies();
 }
